@@ -1276,7 +1276,7 @@ var Lightbox = function (_Component) {
 			return React.createElement(
 				'figure',
 				{ className: css(this.classes.figure) },
-				React.createElement('img', {
+				image.youtubeId ? React.createElement('iframe', { width: '560', height: '315', src: 'https://www.youtube.com/embed/' + image.youtubeId, frameborder: '0', allow: 'autoplay; encrypted-media', allowfullscreen: true }) : React.createElement('img', {
 					className: css(this.classes.image, imageLoaded && this.classes.imageLoaded),
 					onClick: onClickImage,
 					sizes: sizes,
@@ -1388,7 +1388,8 @@ Lightbox.propTypes = {
 	enableKeyboardInput: PropTypes.bool,
 	imageCountSeparator: PropTypes.string,
 	images: PropTypes.arrayOf(PropTypes.shape({
-		src: PropTypes.string.isRequired,
+		src: PropTypes.string,
+		youtubeId: PropTypes.string,
 		srcSet: PropTypes.array,
 		caption: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
 		thumbnail: PropTypes.string
