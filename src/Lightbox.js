@@ -54,7 +54,9 @@ class Lightbox extends Component {
 				window.addEventListener('keydown', this.handleKeyboardInput);
 			}
 			if (typeof this.props.currentImage === 'number') {
-				this.preloadImage(this.props.currentImage, this.handleImageLoaded);
+				if (!this.props.images[this.props.currentImage].youtubeId) {
+					this.preloadImage(this.props.currentImage, this.handleImageLoaded);
+				}
 			}
 		}
 	}
@@ -86,8 +88,12 @@ class Lightbox extends Component {
 
 		// preload current image
 		if (this.props.currentImage !== nextProps.currentImage || !this.props.isOpen && nextProps.isOpen) {
-			const img = this.preloadImage(nextProps.currentImage, this.handleImageLoaded);
-			this.setState({ imageLoaded: img.complete });
+			if (!this.props.images[nextProps.currentImage].youtubeId) {
+				const img = this.preloadImage(nextProps.currentImage, this.handleImageLoaded);
+				this.setState({ imageLoaded: img.complete });
+			} else {
+				this.handleImageLoaded()
+			}
 		}
 
 		// add/remove event listeners
@@ -272,7 +278,7 @@ class Lightbox extends Component {
 					<Swipeable onSwipedLeft={this.gotoNext} onSwipedRight={this.gotoPrev} />
 				*/}
 				{ image.youtubeId ? (
-					<iframe width="560" height="315" src={`https://www.youtube.com/embed/${image.youtubeId}`} frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+					<iframe width="720" height="405" src={`https://www.youtube.com/embed/${image.youtubeId}`} frameBorder="0" allow="autoplay; encrypted-media" allowFullScreen></iframe>
 				): (
 					<img
 						className={css(this.classes.image, imageLoaded && this.classes.imageLoaded)}
