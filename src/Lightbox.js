@@ -54,7 +54,10 @@ class Lightbox extends Component {
 				window.addEventListener('keydown', this.handleKeyboardInput);
 			}
 			if (typeof this.props.currentImage === 'number') {
-				if (!this.props.images[this.props.currentImage].youtubeId) {
+				if (
+					!this.props.images[this.props.currentImage].youtubeId
+					&& !this.props.images[this.props.currentImage].component
+				) {
 					this.preloadImage(this.props.currentImage, this.handleImageLoaded);
 				}
 			}
@@ -88,7 +91,10 @@ class Lightbox extends Component {
 
 		// preload current image
 		if (this.props.currentImage !== nextProps.currentImage || !this.props.isOpen && nextProps.isOpen) {
-			if (!this.props.images[nextProps.currentImage].youtubeId) {
+			if (
+				!this.props.images[nextProps.currentImage].youtubeId
+				&& !this.props.images[this.props.currentImage].component
+			) {
 				const img = this.preloadImage(nextProps.currentImage, this.handleImageLoaded);
 				this.setState({ imageLoaded: img.complete });
 			} else {
@@ -270,6 +276,28 @@ class Lightbox extends Component {
 		const heightOffset = `${this.theme.header.height + this.theme.footer.height + thumbnailsSize
 			+ (this.theme.container.gutter.vertical)}px`;
 
+		let el
+		if (image.youtubeId) {
+			el = <iframe width="720" height="405" src={`https://www.youtube.com/embed/${image.youtubeId}`} frameBorder="0" allow="autoplay; encrypted-media" allowFullScreen></iframe>
+		} else if (image.component) {
+			el = image.component
+		} else {
+			el = (
+        <img
+          className={css(this.classes.image, imageLoaded && this.classes.imageLoaded)}
+          onClick={onClickImage}
+          sizes={sizes}
+          alt={image.alt}
+          src={image.src}
+          srcSet={sourceSet}
+          style={{
+            cursor: onClickImage ? 'pointer' : 'auto',
+            maxHeight: `calc(100vh - ${heightOffset})`,
+          }}
+        />
+      )
+		}
+
 		return (
 			<figure className={css(this.classes.figure)}>
 				{/*
@@ -277,22 +305,7 @@ class Lightbox extends Component {
 					https://fb.me/react-unknown-prop is resolved
 					<Swipeable onSwipedLeft={this.gotoNext} onSwipedRight={this.gotoPrev} />
 				*/}
-				{ image.youtubeId ? (
-					<iframe width="720" height="405" src={`https://www.youtube.com/embed/${image.youtubeId}`} frameBorder="0" allow="autoplay; encrypted-media" allowFullScreen></iframe>
-				): (
-					<img
-						className={css(this.classes.image, imageLoaded && this.classes.imageLoaded)}
-						onClick={onClickImage}
-						sizes={sizes}
-						alt={image.alt}
-						src={image.src}
-						srcSet={sourceSet}
-						style={{
-							cursor: onClickImage ? 'pointer' : 'auto',
-							maxHeight: `calc(100vh - ${heightOffset})`,
-						}}
-					/>
-				) }
+				{el}
 			</figure>
 		);
 	}
@@ -386,6 +399,7 @@ Lightbox.propTypes = {
 		PropTypes.shape({
 			src: PropTypes.string,
 			youtubeId: PropTypes.string,
+			component: PropTypes.element,
 			srcSet: PropTypes.array,
 			caption: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
 			thumbnail: PropTypes.string,

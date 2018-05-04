@@ -1036,7 +1036,9 @@ var Lightbox = function (_Component) {
 					window.addEventListener('keydown', this.handleKeyboardInput);
 				}
 				if (typeof this.props.currentImage === 'number') {
-					this.preloadImage(this.props.currentImage, this.handleImageLoaded);
+					if (!this.props.images[this.props.currentImage].youtubeId && !this.props.images[this.props.currentImage].component) {
+						this.preloadImage(this.props.currentImage, this.handleImageLoaded);
+					}
 				}
 			}
 		}
@@ -1070,8 +1072,12 @@ var Lightbox = function (_Component) {
 
 			// preload current image
 			if (this.props.currentImage !== nextProps.currentImage || !this.props.isOpen && nextProps.isOpen) {
-				var img = this.preloadImage(nextProps.currentImage, this.handleImageLoaded);
-				this.setState({ imageLoaded: img.complete });
+				if (!this.props.images[nextProps.currentImage].youtubeId && !this.props.images[this.props.currentImage].component) {
+					var img = this.preloadImage(nextProps.currentImage, this.handleImageLoaded);
+					this.setState({ imageLoaded: img.complete });
+				} else {
+					this.handleImageLoaded();
+				}
 			}
 
 			// add/remove event listeners
@@ -1273,10 +1279,13 @@ var Lightbox = function (_Component) {
 			var thumbnailsSize = showThumbnails ? this.theme.thumbnail.size : 0;
 			var heightOffset = this.theme.header.height + this.theme.footer.height + thumbnailsSize + this.theme.container.gutter.vertical + 'px';
 
-			return React.createElement(
-				'figure',
-				{ className: css(this.classes.figure) },
-				image.youtubeId ? React.createElement('iframe', { width: '560', height: '315', src: 'https://www.youtube.com/embed/' + image.youtubeId, frameborder: '0', allow: 'autoplay; encrypted-media', allowfullscreen: true }) : React.createElement('img', {
+			var el = void 0;
+			if (image.youtubeId) {
+				el = React.createElement('iframe', { width: '720', height: '405', src: 'https://www.youtube.com/embed/' + image.youtubeId, frameBorder: '0', allow: 'autoplay; encrypted-media', allowFullScreen: true });
+			} else if (image.component) {
+				el = image.component;
+			} else {
+				el = React.createElement('img', {
 					className: css(this.classes.image, imageLoaded && this.classes.imageLoaded),
 					onClick: onClickImage,
 					sizes: sizes,
@@ -1287,7 +1296,13 @@ var Lightbox = function (_Component) {
 						cursor: onClickImage ? 'pointer' : 'auto',
 						maxHeight: 'calc(100vh - ' + heightOffset + ')'
 					}
-				})
+				});
+			}
+
+			return React.createElement(
+				'figure',
+				{ className: css(this.classes.figure) },
+				el
 			);
 		}
 	}, {
@@ -1390,6 +1405,7 @@ Lightbox.propTypes = {
 	images: PropTypes.arrayOf(PropTypes.shape({
 		src: PropTypes.string,
 		youtubeId: PropTypes.string,
+		component: PropTypes.element,
 		srcSet: PropTypes.array,
 		caption: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
 		thumbnail: PropTypes.string
