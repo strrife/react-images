@@ -1427,7 +1427,7 @@ Lightbox.propTypes = {
 	spinnerSize: PropTypes.number,
 	theme: PropTypes.object,
 	thumbnailOffset: PropTypes.number,
-	width: PropTypes.number
+	width: PropTypes.string
 };
 Lightbox.defaultProps = {
 	closeButtonTitle: 'Close (Esc)',
@@ -1446,7 +1446,7 @@ Lightbox.defaultProps = {
 	spinnerSize: 100,
 	theme: {},
 	thumbnailOffset: 2,
-	width: 1024
+	width: '1024px'
 };
 Lightbox.childContextTypes = {
 	theme: PropTypes.object.isRequired
