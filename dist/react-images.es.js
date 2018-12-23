@@ -1249,7 +1249,7 @@ var Lightbox = function (_Component) {
 						{ className: css(this.classes.content), style: { marginBottom: offsetThumbnails, maxWidth: width } },
 						imageLoaded && this.renderHeader(),
 						this.renderImages(),
-						this.renderSpinner(),
+						!imageLoaded && this.renderSpinner(),
 						imageLoaded && this.renderFooter()
 					),
 					imageLoaded && this.renderThumbnails(),

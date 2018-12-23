@@ -247,7 +247,7 @@ class Lightbox extends Component {
 					<div className={css(this.classes.content)} style={{ marginBottom: offsetThumbnails, maxWidth: width }}>
 						{imageLoaded && this.renderHeader()}
 						{this.renderImages()}
-						{this.renderSpinner()}
+						{!imageLoaded && this.renderSpinner()}
 						{imageLoaded && this.renderFooter()}
 					</div>
 					{imageLoaded && this.renderThumbnails()}
