@@ -1036,7 +1036,7 @@ var Lightbox = function (_Component) {
 					window.addEventListener('keydown', this.handleKeyboardInput);
 				}
 				if (typeof this.props.currentImage === 'number') {
-					if (!this.props.images[this.props.currentImage].youtubeId && !this.props.images[this.props.currentImage].component) {
+					if (!this.props.images[this.props.currentImage].youtubeId && !this.props.images[this.props.currentImage].vimeoId && !this.props.images[this.props.currentImage].component) {
 						this.preloadImage(this.props.currentImage, this.handleImageLoaded);
 					}
 				}
@@ -1072,7 +1072,7 @@ var Lightbox = function (_Component) {
 
 			// preload current image
 			if (this.props.currentImage !== nextProps.currentImage || !this.props.isOpen && nextProps.isOpen) {
-				if (!this.props.images[nextProps.currentImage].youtubeId && !this.props.images[this.props.currentImage].component) {
+				if (!this.props.images[nextProps.currentImage].youtubeId && !this.props.images[nextProps.currentImage].vimeoId && !this.props.images[this.props.currentImage].component) {
 					var img = this.preloadImage(nextProps.currentImage, this.handleImageLoaded);
 					this.setState({ imageLoaded: img.complete });
 				} else {
@@ -1282,6 +1282,8 @@ var Lightbox = function (_Component) {
 			var el = void 0;
 			if (image.youtubeId) {
 				el = React.createElement('iframe', { width: '720', height: '405', src: 'https://www.youtube.com/embed/' + image.youtubeId, frameBorder: '0', allow: 'autoplay; encrypted-media', allowFullScreen: true });
+			} else if (image.vimeoId) {
+				el = React.createElement('iframe', { src: 'https://player.vimeo.com/video/' + image.vimeoId, width: '640', height: '360', frameBorder: '0', webkitallowfullscreen: true, mozallowfullscreen: true, allowFullScreen: true });
 			} else if (image.component) {
 				el = image.component;
 			} else {
@@ -1405,6 +1407,7 @@ Lightbox.propTypes = {
 	images: PropTypes.arrayOf(PropTypes.shape({
 		src: PropTypes.string,
 		youtubeId: PropTypes.string,
+		vimeoId: PropTypes.string,
 		component: PropTypes.element,
 		srcSet: PropTypes.array,
 		caption: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),

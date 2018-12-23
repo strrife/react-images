@@ -56,6 +56,7 @@ class Lightbox extends Component {
 			if (typeof this.props.currentImage === 'number') {
 				if (
 					!this.props.images[this.props.currentImage].youtubeId
+					&& !this.props.images[this.props.currentImage].vimeoId
 					&& !this.props.images[this.props.currentImage].component
 				) {
 					this.preloadImage(this.props.currentImage, this.handleImageLoaded);
@@ -92,8 +93,9 @@ class Lightbox extends Component {
 		// preload current image
 		if (this.props.currentImage !== nextProps.currentImage || !this.props.isOpen && nextProps.isOpen) {
 			if (
-				!this.props.images[nextProps.currentImage].youtubeId
-				&& !this.props.images[this.props.currentImage].component
+					!this.props.images[nextProps.currentImage].youtubeId
+					&& !this.props.images[nextProps.currentImage].vimeoId
+          && !this.props.images[this.props.currentImage].component
 			) {
 				const img = this.preloadImage(nextProps.currentImage, this.handleImageLoaded);
 				this.setState({ imageLoaded: img.complete });
@@ -279,6 +281,8 @@ class Lightbox extends Component {
 		let el
 		if (image.youtubeId) {
 			el = <iframe width="720" height="405" src={`https://www.youtube.com/embed/${image.youtubeId}`} frameBorder="0" allow="autoplay; encrypted-media" allowFullScreen></iframe>
+		} else if (image.vimeoId) {
+      el = <iframe src={`https://player.vimeo.com/video/${image.vimeoId}`} width="640" height="360" frameBorder="0" webkitallowfullscreen mozallowfullscreen allowFullScreen></iframe>
 		} else if (image.component) {
 			el = image.component
 		} else {
@@ -399,6 +403,7 @@ Lightbox.propTypes = {
 		PropTypes.shape({
 			src: PropTypes.string,
 			youtubeId: PropTypes.string,
+			vimeoId: PropTypes.string,
 			component: PropTypes.element,
 			srcSet: PropTypes.array,
 			caption: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
