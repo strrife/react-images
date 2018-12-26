@@ -1283,7 +1283,7 @@ var Lightbox = function (_Component) {
 			if (image.youtubeId) {
 				el = React.createElement('iframe', { width: '720', height: '405', src: 'https://www.youtube.com/embed/' + image.youtubeId, frameBorder: '0', allow: 'autoplay; encrypted-media', allowFullScreen: true });
 			} else if (image.vimeoId) {
-				el = React.createElement('iframe', { src: 'https://player.vimeo.com/video/' + image.vimeoId, width: '640', height: '360', frameBorder: '0', webkitallowfullscreen: true, mozallowfullscreen: true, allowFullScreen: true });
+				el = React.createElement('iframe', { src: 'https://player.vimeo.com/video/' + image.vimeoId, width: '640', height: '360', frameBorder: '0', allowFullScreen: true });
 			} else if (image.component) {
 				el = image.component;
 			} else {

@@ -282,7 +282,7 @@ class Lightbox extends Component {
 		if (image.youtubeId) {
 			el = <iframe width="720" height="405" src={`https://www.youtube.com/embed/${image.youtubeId}`} frameBorder="0" allow="autoplay; encrypted-media" allowFullScreen></iframe>
 		} else if (image.vimeoId) {
-      el = <iframe src={`https://player.vimeo.com/video/${image.vimeoId}`} width="640" height="360" frameBorder="0" webkitallowfullscreen mozallowfullscreen allowFullScreen></iframe>
+      el = <iframe src={`https://player.vimeo.com/video/${image.vimeoId}`} width="640" height="360" frameBorder="0" allowFullScreen></iframe>
 		} else if (image.component) {
 			el = image.component
 		} else {
